@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% block input_area %}
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Raleway:400,500);
+
+html,
+body {
+  background-color: #00bfff;
+  text-align: center;
+  font-family: 'Raleway', Helvetica, sans-serif;
+  min-width: 320px;
+}
+
+header {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 20px;
+  text-align: <center></center>;
+}
+
+#form-outer {
+  background-color: rgb(250, 250, 250);
+  margin: 0 auto;
+  border-radius: 4px;
+  width: 75%;
+  max-width: 900px;
+  padding: 10px;
+  padding-top: 20px;
+}
+
+.labels {
+  display: inline-block;
+  text-align: right;
+  width: 15%;
+  padding: 0px;
+  vertical-align: right;
+  margin-top: 10px;
+}
+
+.rightTab {
+  display: inline-block;
+  text-align: left;
+  width: 30%;
+  vertical-align: middle;
+}
+
+.input-field {
+  height: 20px;
+  width: 280px;
+  padding: 5px;
+  margin: 10px;
+  border: 1px solid #c0c0c0;
+  border-radius: 2px;
+}
+
+#userAge {
+  width: 40px;
+}
+
+.userRatings,
+input[type="checkbox"] {
+  float: left;
+  margin-right: 5px;
+}
+
+#submit {
+  background-color: #1a8cff;
+  border-radius: 4px;
+  color: white;
+  font-size: 1em;
+  height: 40px;
+  width: 96px;
+  margin: 10px;
+  border: 0px solid;
+  cursor: pointer;
+}
+
+#reset {
+  background-color: #1a8cff;
+  border-radius: 4px;
+  color: white;
+  font-size: 1em;
+  height: 40px;
+  width: 96px;
+  margin: 10px;
+  border: 0px solid;
+  cursor: pointer;
+}
+.dropdown {
+  height: 35px;
+  width: 140px;
+  padding: 5px;
+  margin: 10px;
+  margin-top: 15px;
+  border: 1px solid #c0c0c0;
+  border-radius: 2px;
+}
+
+.radio, .checkbox {
+  position: relative;
+  left: -43px;
+  margin-left: 10px;
+  display: block;
+  padding-bottom: 10px;
+}
+
+@media screen and (max-width: 833px) {
+  .input-field {
+    width: 80%;
+  }
+  select {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .labels {
+    width: 100%;
+    text-align: left;
+  }
+  .rightTab {
+    width: 80%;
+    float: left;
+  }
+  .input-field {
+    width: 100%;
+  }
+  select {
+    width: 100%;
+  }
+}
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+.flex-item + .flex-item {
+  margin-left: 10px;
+}
+.vertical {
+            border-left: 6px solid black;
+            height: 200px;
+            position:absolute;
+            left: 50%;
+        }
+</style>
+
+<script>
+async function scan(){
+            let fetchRes = await fetch("/covid/scan/").then(res =>
+            res.json()).then(data => {
+                console.log(data)
+            if (data.status){
+              console.log(data.data.name)
+              document.getElementById('id').value = data.data.aadhar;
+              document.getElementById('name').value = data.data.name;
+              document.getElementById('mobile').value = data.data.mobile;
+              document.getElementById('comments').value = data.data.address;
+              document.getElementById('image').src = data.data.profile_img;
+            }
+            })
+        };
+
+</script>
+<!--<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<div id="form-outer" >
+    <p id="description">
+    To know the details of Person
+    </p>
+    <form id="survey-form" method="POST" action="/covid/save_person_details/">
+      <div style="float:left; width:50%;">
+      <div class="rowTab">
+        <div class="labels">
+          <label id="ref-label" for="id">Ref ID: </label>
+        </div>
+        <div class="rightTab">
+          <input autofocus type="text" name="id" id="id" class="input-field" placeholder="Enter your ID" required>
+        </div>
+      </div>
+      <div class="rowTab">
+        <div class="labels">
+          <label id="name-label" for="name">Name: </label>
+        </div>
+        <div class="rightTab">
+          <input autofocus type="text" name="name" id="name" class="input-field" placeholder="Enter your name" required>
+        </div>
+      </div>
+      <div class="rowTab">
+        <div class="labels">
+          <label for="gender">Gender: </label>
+        </div>
+        <div class="rightTab">
+          <ul style="list-style: none;">
+            <li id="male" class="radio"><label><input name="radio-buttons" value="male"  type="radio" class="userRatings" >Male</label></li>
+            <li id="female" class="radio"><label><input name="radio-buttons" value="female"  type="radio" class="userRatings" >Female</label></li>
+            <li id="others" class="radio"><label><input name="radio-buttons" value="others"  type="radio" class="userRatings" >Others</label></li>
+          </ul>
+        </div>
+      </div>
+      <div class="rowTab">
+        <div class="labels">
+          <label id="dob-label" for="dob">D.O.B: </label>
+        </div>
+        <div class="rightTab">
+          <input type="date" name="dob" id="iddob" class="input-field" required>
+        </div>
+      </div>
+      <div class="rowTab">
+        <div class="labels">
+          <label id="mobile-label" for="mobile">Mobile: </label>
+        </div>
+        <div class="rightTab">
+          <input type="number" name="mobile" id="mobile" class="input-field" required placeholder="Enter your mobile">
+        </div>
+      </div>
+      <div class="rowTab">
+        <div class="labels">
+          <label id="email-label" for="email">Email: </label>
+        </div>
+        <div class="rightTab">
+          <input type="email" name="email" id="email" class="input-field" required placeholder="Enter your Email">
+        </div>
+      </div>
+      <div class="rowTab">
+        <div class="labels">
+          <label id="address-label" for="address">Address: </label>
+        </div>
+        <div class="rightTab">
+          <textarea id="comments" class="input-field" style="height:50px;resize:vertical;" name="address" placeholder="Enter your address here..."></textarea>
+        </div>
+      </div>
+
+      </div>
+      <div style="float:right; width:50%; ">
+        <p width="100%"
+            style="padding-left: 0px; padding-right: 0px; padding-top: 5px; padding-bottom: 3px; border-left: 0px solid #eee; border-top: 0px solid #eee; ">
+            <img id ="image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0mHoQJCbcO_BbxJnJ8BGnjpgGhXIK7ecOdw&usqp=CAU.jpg" alt="Paris" style="width:50%;">
+        </p>
+      </div>
+
+      <div class="d-grid gap-2 col-1 mx-auto">
+      <button style="font-size:20px" type="submit" class="button" value="Scan" onclick="scan(); ">Scan
+          <i class="fa fa-camera" style="font-size:24px"></i>
+      </button>
+      </div>
+      <div class="flex">
+        <button id="submit" type="submit" class="flex-item" value="submit">Submit</button>
+        <button id="reset" type="reset" class="flex-item">Reset</button>
+      </div>
+    </form>
+</div>
+<div id="resultTable" class="mt-5">
+</div>
+
+<script type="text/javascript">
+      var frm = $('#survey-form');
+
+      frm.submit(function (e) {
+      var aadhar = document.getElementById('id').value;
+      var name = document.getElementById('name').value;
+      var mobile = document.getElementById('mobile').value;
+      var address = document.getElementById('comments').value;
+      var profile_img = document.getElementById('image').src;
+      $("#submit").html("Saving Data...");
+      //document.getElementById("resultTable").innerHTML = "";
+      document.getElementById("submit").disabled = true;
+      var data1 = {"aadhar": aadhar, "name": name, "mobile":mobile, "address":address, "profile_img":profile_img};
+
+          e.preventDefault();
+            let fetchRes = fetch("/covid/save_person_details/", {
+             method: 'POST',
+             headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+             },
+             body: JSON.stringify(data1),
+            }).then((response) => {
+                                  if (response.ok) {
+                                  console.log(response);
+                                    return response.json();
+                                  }
+                                  throw new Error(alert('Something went wrong'));
+                                })
+                                .then((responseJson) => {
+                                  // Do something with the response
+                                  console.log(responseJson);
+                                  $("#errorAlert").attr("hidden",true);
+                                  //document.getElementById("resultTable").innerHTML = responseJson.expected_date;
+                                  alert("The form was submitted and result expected date is: "+responseJson.expected_date+"");
+                                  $("#submit").html("Submit");
+                                  document.getElementById("submit").disabled = false;
+                                })
+                                .catch((error) => {
+                                  console.log(error);
+                                  $("#submitButton").html("Submit");
+                                  document.getElementById("submit").disabled = false;
+                                  error_msg = responseJSON.ErrorMessage;
+                                  error_msg = error_msg;
+                                  $("#errorAlert").attr("hidden",false);
+                                  document.getElementById("errorAlert").innerHTML = error_msg;
+                                  alert(error_msg);
+                                });
+                                location.reload();
+      });
+</script>
+{% endblock input_area %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block input_area %}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script>
+async function result(result){
+            var row = event.target.parentNode.parentNode;
+            console.log(row);
+            if (result === 0) {
+             newclass = "success";
+            } else {
+             newclass = "danger";
+            }
+            row.className += newclass;
+
+            var data = row.getElementsByTagName("td");
+            console.log(data);
+            var person_id = data[0].textContent;
+            console.log(person_id);
+
+           // $.ajax({
+            //    type: "POST",
+            //    url: '{{ '/covid/lab_result/' }}',
+            //    data: {result: result, person_id: person_id},
+             //   success: function callback(response){
+            //            }
+            // });
+            // window.location.reload();
+        // }
+
+            var payload = {result: result, person_id: person_id}
+            let fetchRes = await fetch('/covid/lab_result/', {
+             method: 'POST',
+             headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+             },
+             body: JSON.stringify(payload),
+            })
+            location.reload();
+        };
+
+</script>
+<body>
+<input type="date" id="date">
+<script>
+// var date = new Date();
+// var currentDate = date.toISOString().slice(0,10);
+// var currentTime = date.getHours() + ':' + date.getMinutes();
+
+// document.getElementById('date').value = currentDate;
+
+$('#date').change(function () {
+        var date = moment(this.value).format('DD-MM-YYYY');
+        var filter, table, tr, td, i;
+        filter = date.toUpperCase();
+        table = document.getElementById("testTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[5];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+
+        }
+
+    });
+
+</script>
+</body>
+<table id="testTable" class="table">
+<thead>
+<tr style="text-align: right;">
+    <th>Id</th>
+    <th>Name</th>
+    <th>Aadhar</th>
+    <th>Address</th>
+    <th>Mobile Number</th>
+    <th>Created Date</th>
+    <th>Expected Date</th>
+    <th>Result</th>
+    <th>Result Date</th>
+</tr>
+</thead>
+<tbody>
+    {% for data in table_data %}
+    <tr class="other-styles {{data.result_cls}}">
+        <td>{{data.id}}</td>
+        <td>{{data.name}}</td>
+        <td>{{data.aadhar}}</td>
+        <td>{{data.address}}</td>
+        <td>{{data.mobile}}</td>
+        <td>{{data.created_date}}</td>
+        <td>{{data.expected_date}}</td>
+        <td>{{data.result}}</td>
+        <td>{{data.result_date}}</td>
+        {% if data.result %}
+            <td><input type="submit" class="btn btn-danger btn-xs" value="POSITIVE" disabled onclick="result(1); "></td>
+            <td><input type="submit" class="btn btn-success btn-xs" value="NEGATIVE" disabled onclick="result(0);"></td>
+        {% else %}
+        <td><input type="submit" class="btn btn-danger btn-xs" value="POSITIVE" onclick="result(1); "></td>
+        <td><input type="submit" class="btn btn-success btn-xs" value="NEGATIVE" onclick="result(0);"></td>
+        {% endif %}
+<!--        <button type="button" class="btn btn-info" style="margin-right: 2%;"> <a href="/covid/scan/">POSITIVE</a></button>-->
+<!--        <button type="button" class="btn btn-info" style="margin-left: 2%;"> <a href="/covid/scan/">NEGATIVE</a></button>-->
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endblock input_area %}
+</html>
+
+<!--$('.start').on('click', function(e) {-->
+<!--  let isPaused = $(this).text().toLowerCase() === "pause";-->
+<!--  if (isPaused) {-->
+<!--    $(this).text('Start');-->
+<!--  } else {-->
+<!--    $(this).text('Pause');-->
+<!--  }-->
+<!--})-->
+
+
+<!-- $("#btnTest").click(function() {-->
+<!--        $(this).attr("disabled", true);-->
+<!--        setTimeout(function() {-->
+<!--            $('#btnTest').removeAttr("disabled");-->
+<!--        }, 30000);-->
+<!--    });-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
+<!--<input type='button' id='btnTest'>-->
