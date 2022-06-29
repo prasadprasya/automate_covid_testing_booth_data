@@ -4,11 +4,46 @@ import psycopg2
 
 def connection():
     conn = psycopg2.connect(
-        host="localhost",
-        database="covidbooth",
-        user="postgres",
-        password="prasad@123")
+        host="atbd.czfvpanhqwau.ap-south-1.rds.amazonaws.com",
+        database="atbd",
+        user="masteratbd",
+        password="9110564186")
+    cur = conn.cursor()
+    # Make some fresh tables using executescript()
 
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS personal_details (
+        id serial4 NOT NULL,
+        "name" varchar(50) NOT NULL,
+        aadhar varchar(50) NOT NULL,
+        address varchar(500) NOT NULL,
+        mobile varchar(20) NOT NULL,
+        created_by varchar(50) NULL,
+        created_date timestamp NOT NULL DEFAULT now(),
+        modified_by varchar(50) NULL,
+        modified_date timestamp NULL,
+        excepted_date date NULL,
+        CONSTRAINT personal_details_pk PRIMARY KEY (id)
+    );
+    ''')
+    cur.execute('''
+            CREATE TABLE IF NOT EXISTS test_details (
+            id serial4 NOT NULL,
+            person_id int4 NOT NULL,
+            "result" int4 NULL,
+            lab_name varchar(50) NULL,
+            lab_code varchar(50) NULL,
+            lab_address varchar(200) NULL,
+            message_status int4 NULL DEFAULT 0,
+            created_by varchar(50) NULL,
+            created_date timestamp NOT NULL DEFAULT now(),
+            modified_by varchar(50) NULL,
+            modified_date timestamp NULL,
+            CONSTRAINT test_details_un UNIQUE (person_id)
+        );
+
+        ''')
+    conn.commit()
     return conn
 
 
@@ -33,12 +68,12 @@ def insert_scanned_data():
             cur.execute('''INSERT INTO "personal_details"
                 (name, aadhar, address, mobile) 
                 VALUES (%s, %s, %s, %s) RETURNING id''',
-                                    (name, aadhar, address, mobile))
+                        (name, aadhar, address, mobile))
             conn.commit()
             person_id = cur.fetchone()
             print(person_id)
             cur.execute("""INSERT INTO test_details (person_id)
-                            VALUES (%s)""", (person_id, ))
+                            VALUES (%s)""", (person_id,))
             conn.commit()
             cur.close()
             response["status"] = True
@@ -70,7 +105,8 @@ def get_scanned_data():
             data_string = str(data)
             x = data_string.split("&")
             name, aadhar, address, mobile, profile_img = x
-            data_dict = {"name": name, "aadhar": aadhar, "address": address, "mobile": mobile, "profile_img": profile_img}
+            data_dict = {"name": name, "aadhar": aadhar, "address": address, "mobile": mobile,
+                         "profile_img": profile_img}
             response["status"] = True
             response["data"] = data_dict
             flag = False
@@ -103,5 +139,3 @@ def fetch_scanned_data():
                          "created_date": data[6].strftime("%d-%m-%Y %I:%M %p")}
             data_list.append(data_dict)
     return data_list
-
-
