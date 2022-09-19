@@ -4,10 +4,10 @@ import psycopg2
 
 def connection():
     conn = psycopg2.connect(
-        host="atbd.czfvpanhqwau.ap-south-1.rds.amazonaws.com",
-        database="atbd",
-        user="masteratbd",
-        password="9110564186")
+        host="localhost",
+        database="covidbooth",
+        user="postgres",
+        password="prasad@123")
     cur = conn.cursor()
     # Make some fresh tables using executescript()
 
