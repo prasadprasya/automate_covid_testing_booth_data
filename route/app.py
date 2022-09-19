@@ -68,7 +68,6 @@ def lab_result():
 def booth():
     return render_template("booth.html")
 
-
 results_app.add_url_rule(rule="/", endpoint="homepage", view_func=homepage, methods=["GET"])
 results_app.add_url_rule(rule="/booth/", endpoint="booth", view_func=booth, methods=["GET"])
 # Scanner End
