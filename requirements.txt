@@ -1,4 +1,4 @@
-Flask~=2.0.2
+Flask~=2.1.2
 DateTime~=4.3
-opencv-python~=3.4.13.47
+jinja2
 psycopg2-binary==2.8.6

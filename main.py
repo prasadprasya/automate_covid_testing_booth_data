@@ -1,7 +1,7 @@
 from flask import Flask
 from route.app import results_app
 
-project = Flask("JNTUA")
+project = Flask("ATBD")
 
 project.register_blueprint(results_app, url_prefix="/covid")
 
